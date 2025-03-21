@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "lvgl/src/indev/lv_indev_private.h"
 #include "esp_brookesia_conf_internal.h"
 #include "esp_brookesia_core_utils.h"
 
@@ -168,7 +169,7 @@ lv_indev_t *esp_brookesia_core_utils_get_input_dev(const lv_disp_t *display, lv_
     lv_indev_t *indev_tmp = lv_indev_get_next(NULL);
 
     while (indev_tmp != NULL) {
-        if (indev_tmp->driver->disp == display && indev_tmp->driver->type == type) {
+        if (indev_tmp->disp == display && indev_tmp->type == type) {
             indev = indev_tmp;
             break;
         }

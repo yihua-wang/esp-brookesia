@@ -292,7 +292,8 @@ bool ESP_Brookesia_CoreHome::beginCore(void)
     // Container styles
     for (auto &style : _container_styles) {
         lv_style_init(&style);
-        lv_style_set_size(&style, LV_SIZE_CONTENT);
+        lv_style_set_width(&style, LV_SIZE_CONTENT);
+        lv_style_set_height(&style, LV_SIZE_CONTENT);
         lv_style_set_radius(&style, 0);
         lv_style_set_border_width(&style, 0);
         lv_style_set_pad_all(&style, 0);
@@ -302,11 +303,11 @@ bool ESP_Brookesia_CoreHome::beginCore(void)
     }
     // Main screen
     lv_obj_align(main_screen_obj.get(), LV_ALIGN_TOP_LEFT, 0, 0);
-    lv_obj_clear_flag(main_screen_obj.get(), LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_clear_flag(main_screen_obj.get(), (lv_obj_flag_t)(LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE));
     lv_obj_add_style(main_screen_obj.get(), getCoreContainerStyle(), 0);
     // System screen
     lv_obj_align(system_screen_obj.get(), LV_ALIGN_TOP_LEFT, 0, 0);
-    lv_obj_clear_flag(system_screen_obj.get(), LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_clear_flag(system_screen_obj.get(), (lv_obj_flag_t)(LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE));
     lv_obj_add_style(system_screen_obj.get(), getCoreContainerStyle(), 0);
 
     /* Save objects */

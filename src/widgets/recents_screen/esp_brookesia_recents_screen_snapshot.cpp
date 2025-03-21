@@ -87,7 +87,7 @@ bool ESP_Brookesia_RecentsScreenSnapshot::begin(lv_obj_t *parent)
     // Title icon
     lv_obj_add_style(title_icon.get(), _core.getCoreHome().getCoreContainerStyle(), 0);
     lv_obj_set_size(title_icon.get(), LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_img_set_size_mode(title_icon.get(), LV_IMG_SIZE_MODE_REAL);
+    // todo: lv_img_set_size_mode(title_icon.get(), LV_IMG_SIZE_MODE_REAL);
     lv_img_set_src(title_icon.get(), _conf.icon_image_resource);
     // Tile label
     lv_obj_add_style(title_label.get(), _core.getCoreHome().getCoreContainerStyle(), 0);
@@ -100,7 +100,7 @@ bool ESP_Brookesia_RecentsScreenSnapshot::begin(lv_obj_t *parent)
     // Snapshot image
     lv_obj_add_style(snapshot_image.get(), _core.getCoreHome().getCoreContainerStyle(), 0);
     lv_obj_center(snapshot_image.get());
-    lv_img_set_size_mode(snapshot_image.get(), LV_IMG_SIZE_MODE_REAL);
+    // todo: lv_img_set_size_mode(snapshot_image.get(), LV_IMG_SIZE_MODE_REAL);
     lv_obj_clear_flag(snapshot_image.get(), LV_OBJ_FLAG_SCROLLABLE);
 
     /* Save objects */
@@ -172,12 +172,12 @@ bool ESP_Brookesia_RecentsScreenSnapshot::updateByNewData(void)
     lv_obj_set_size(_title_obj.get(), _data.title.main_size.width, _data.title.main_size.height);
     lv_obj_set_style_pad_column(_title_obj.get(), _data.title.main_layout_column_pad, 0);
     // Title icon
-    h_factor = (float)(_data.title.icon_size.height) / ((const lv_img_dsc_t *)_conf.icon_image_resource)->header.h;
-    w_factor = (float)(_data.title.icon_size.width) / ((const lv_img_dsc_t *)_conf.icon_image_resource)->header.w;
+    h_factor = (float)(_data.title.icon_size.height) / ((const lv_image_dsc_t *)_conf.icon_image_resource)->header.h;
+    w_factor = (float)(_data.title.icon_size.width) / ((const lv_image_dsc_t *)_conf.icon_image_resource)->header.w;
     if (h_factor < w_factor) {
-        lv_img_set_zoom(_title_icon.get(), (int)(h_factor * LV_IMG_ZOOM_NONE));
+        lv_img_set_zoom(_title_icon.get(), (int)(h_factor * LV_ZOOM_NONE));
     } else {
-        lv_img_set_zoom(_title_icon.get(), (int)(w_factor * LV_IMG_ZOOM_NONE));
+        lv_img_set_zoom(_title_icon.get(), (int)(w_factor * LV_ZOOM_NONE));
     }
     lv_obj_refr_size(_title_icon.get());
     // Title label
@@ -189,17 +189,17 @@ bool ESP_Brookesia_RecentsScreenSnapshot::updateByNewData(void)
     lv_obj_set_style_radius(_snapshot_obj.get(), _data.image.radius, 0);
     // Snapshot image
     if (_conf.snapshot_image_resource != _conf.icon_image_resource) {
-        h_factor = (float)(_data.image.main_size.height) / ((const lv_img_dsc_t *)_conf.snapshot_image_resource)->header.h;
-        w_factor = (float)(_data.image.main_size.width) / ((const lv_img_dsc_t *)_conf.snapshot_image_resource)->header.w;
+        h_factor = (float)(_data.image.main_size.height) / ((const lv_image_dsc_t *)_conf.snapshot_image_resource)->header.h;
+        w_factor = (float)(_data.image.main_size.width) / ((const lv_image_dsc_t *)_conf.snapshot_image_resource)->header.w;
         if (h_factor < w_factor) {
-            app_img_zoom = (int)(h_factor * LV_IMG_ZOOM_NONE);
+            app_img_zoom = (int)(h_factor * LV_ZOOM_NONE);
         } else {
-            app_img_zoom = (int)(w_factor * LV_IMG_ZOOM_NONE);
+            app_img_zoom = (int)(w_factor * LV_ZOOM_NONE);
         }
         lv_img_set_zoom(_snapshot_image.get(), app_img_zoom);
-        lv_obj_align(_snapshot_image.get(), LV_ALIGN_TOP_MID, 0, 0);
+        lv_obj_align(_snapshot_image.get(), LV_ALIGN_CENTER, 0, 0);
     } else {
-        lv_img_set_zoom(_snapshot_image.get(), LV_IMG_ZOOM_NONE);
+        lv_img_set_zoom(_snapshot_image.get(), LV_ZOOM_NONE);
         lv_obj_center(_snapshot_image.get());
     }
     lv_img_set_src(_snapshot_image.get(), _conf.snapshot_image_resource);

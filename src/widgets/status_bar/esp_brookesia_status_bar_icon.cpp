@@ -60,7 +60,7 @@ bool ESP_Brookesia_StatusBarIcon::begin(const ESP_Brookesia_Core &core, lv_obj_t
         lv_obj_add_style(image_obj_tmp.get(), core.getCoreHome().getCoreContainerStyle(), 0);
         lv_obj_align(image_obj_tmp.get(), LV_ALIGN_CENTER, 0, 0);
         lv_obj_set_size(image_obj_tmp.get(), LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-        lv_img_set_size_mode(image_obj_tmp.get(), LV_IMG_SIZE_MODE_REAL);
+        // todo: lv_img_set_size_mode(image_obj_tmp.get(), LV_IMG_SIZE_MODE_REAL);
         lv_obj_add_flag(image_obj_tmp.get(), LV_OBJ_FLAG_HIDDEN);
     }
     lv_obj_clear_flag(image_objs[0].get(), LV_OBJ_FLAG_HIDDEN);
@@ -134,7 +134,7 @@ bool ESP_Brookesia_StatusBarIcon::updateByNewData(void)
     int image_resource_num = _image_objs.size();
     float h_factor = 0;
     float w_factor = 0;
-    const lv_img_dsc_t *img_dsc = nullptr;
+    const lv_image_dsc_t *img_dsc = nullptr;
     ESP_Brookesia_LvObj_t main_obj = _main_obj;
     ESP_Brookesia_LvObj_t image_obj = nullptr;
 
@@ -155,7 +155,7 @@ bool ESP_Brookesia_StatusBarIcon::updateByNewData(void)
 
     // Update the size of the image object
     for (int i = 0; i < image_resource_num; i++) {
-        img_dsc = (const lv_img_dsc_t *)_data.icon.images[i].resource;
+        img_dsc = (const lv_image_dsc_t *)_data.icon.images[i].resource;
         image_obj = _image_objs[i];
         lv_img_set_src(image_obj.get(), img_dsc);
         lv_obj_set_style_img_recolor(image_obj.get(), lv_color_hex(_data.icon.images[i].recolor.color), 0);
@@ -166,9 +166,9 @@ bool ESP_Brookesia_StatusBarIcon::updateByNewData(void)
         // Scale the image to a suitable size.
         // So you don’t have to consider the size of the source image.
         if (h_factor < w_factor) {
-            lv_img_set_zoom(image_obj.get(), (int)(h_factor * LV_IMG_ZOOM_NONE));
+            lv_img_set_zoom(image_obj.get(), (int)(h_factor * LV_ZOOM_NONE));
         } else {
-            lv_img_set_zoom(image_obj.get(), (int)(w_factor * LV_IMG_ZOOM_NONE));
+            lv_img_set_zoom(image_obj.get(), (int)(w_factor * LV_ZOOM_NONE));
         }
         lv_obj_refr_size(image_obj.get());
     }

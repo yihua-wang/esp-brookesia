@@ -22,7 +22,7 @@ extern "C" {
             .press_size = ESP_BROOKESIA_STYLE_SIZE_SQUARE(88),   \
         },                                                        \
         .label = {                                                \
-            .text_font = ESP_BROOKESIA_STYLE_FONT_SIZE(16),              \
+            .text_font = ESP_BROOKESIA_STYLE_FONT_SIZE(18),              \
             .text_color = ESP_BROOKESIA_STYLE_COLOR(0xFFFFFF),           \
         },                                                        \
     }

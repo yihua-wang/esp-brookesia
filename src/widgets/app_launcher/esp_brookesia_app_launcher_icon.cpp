@@ -18,8 +18,8 @@ ESP_Brookesia_AppLauncherIcon::ESP_Brookesia_AppLauncherIcon(ESP_Brookesia_Core 
     _info(info),
     _data(data),
     _flags{},
-    _image_default_zoom(LV_IMG_ZOOM_NONE),
-    _image_press_zoom(LV_IMG_ZOOM_NONE),
+    _image_default_zoom(LV_ZOOM_NONE),
+    _image_press_zoom(LV_ZOOM_NONE),
     _main_obj(nullptr),
     _icon_main_obj(nullptr),
     _icon_image_obj(nullptr),
@@ -80,8 +80,8 @@ bool ESP_Brookesia_AppLauncherIcon::begin(lv_obj_t *parent)
     lv_obj_set_style_img_recolor(icon_image_obj.get(), lv_color_hex(_info.image.recolor.color), 0);
     lv_obj_set_style_img_recolor_opa(icon_image_obj.get(), _info.image.recolor.opacity, 0);
     lv_obj_set_size(icon_image_obj.get(), LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_img_set_size_mode(icon_image_obj.get(), LV_IMG_SIZE_MODE_REAL);
-    lv_obj_add_flag(icon_image_obj.get(), LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_EVENT_BUBBLE);
+    // todo: lv_img_set_size_mode(icon_image_obj.get(), LV_IMG_SIZE_MODE_REAL);
+    lv_obj_add_flag(icon_image_obj.get(), (lv_obj_flag_t)(LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_EVENT_BUBBLE));
     lv_obj_clear_flag(icon_image_obj.get(), LV_OBJ_FLAG_PRESS_LOCK);
     lv_obj_add_event_cb(icon_image_obj.get(), onIconTouchEventCallback, LV_EVENT_PRESSED, this);
     lv_obj_add_event_cb(icon_image_obj.get(), onIconTouchEventCallback, LV_EVENT_PRESS_LOST, this);
@@ -158,27 +158,27 @@ bool ESP_Brookesia_AppLauncherIcon::updateByNewData(void)
     lv_obj_set_style_text_opa(_name_label.get(), _data.label.text_color.opacity, 0);
     // Image
     // Calculate the multiple of the size between the target and the image.
-    h_factor = (float)(_data.image.default_size.width) / ((lv_img_dsc_t *)_info.image.resource)->header.h;
-    w_factor = (float)(_data.image.default_size.height) / ((lv_img_dsc_t *)_info.image.resource)->header.w;
+    h_factor = (float)(_data.image.default_size.width) / ((lv_image_dsc_t *)_info.image.resource)->header.h;
+    w_factor = (float)(_data.image.default_size.height) / ((lv_image_dsc_t *)_info.image.resource)->header.w;
     // Scale the image to a suitable size.
     // So you don’t have to consider the size of the source image.
     if (h_factor < w_factor) {
-        _image_default_zoom = (int)(h_factor * LV_IMG_ZOOM_NONE);
+        _image_default_zoom = (int)(h_factor * LV_ZOOM_NONE);
         lv_img_set_zoom(_icon_image_obj.get(), _image_default_zoom);
     } else {
-        _image_default_zoom = (int)(w_factor * LV_IMG_ZOOM_NONE);
+        _image_default_zoom = (int)(w_factor * LV_ZOOM_NONE);
         lv_img_set_zoom(_icon_image_obj.get(), _image_default_zoom);
     }
     lv_obj_refr_size(_icon_image_obj.get());
     // Calculate the multiple of the size between the target and the image.
-    h_factor = (float)(_data.image.press_size.width) / ((lv_img_dsc_t *)_info.image.resource)->header.h;
-    w_factor = (float)(_data.image.press_size.height) / ((lv_img_dsc_t *)_info.image.resource)->header.w;
+    h_factor = (float)(_data.image.press_size.width) / ((lv_image_dsc_t *)_info.image.resource)->header.h;
+    w_factor = (float)(_data.image.press_size.height) / ((lv_image_dsc_t *)_info.image.resource)->header.w;
     // Scale the image to a suitable size.
     // So you don’t have to consider the size of the source image.
     if (h_factor < w_factor) {
-        _image_press_zoom = (int)(h_factor * LV_IMG_ZOOM_NONE);
+        _image_press_zoom = (int)(h_factor * LV_ZOOM_NONE);
     } else {
-        _image_press_zoom = (int)(w_factor * LV_IMG_ZOOM_NONE);
+        _image_press_zoom = (int)(w_factor * LV_ZOOM_NONE);
     }
 
     return true;

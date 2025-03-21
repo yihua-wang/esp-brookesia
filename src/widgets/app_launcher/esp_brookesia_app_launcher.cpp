@@ -5,6 +5,7 @@
  */
 #include <limits>
 #include <memory>
+#include "lvgl/src/misc/lv_area_private.h"
 #include "core/esp_brookesia_core.hpp"
 #include "esp_brookesia_app_launcher.hpp"
 
@@ -300,7 +301,7 @@ bool ESP_Brookesia_AppLauncher::checkPointInsideMain(lv_point_t &point) const
     lv_obj_refr_pos(_main_obj.get());
     lv_obj_get_coords(_main_obj.get(), &area);
 
-    return _lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(_main_obj.get(), 0));
+    return lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(_main_obj.get(), 0));
 }
 
 bool ESP_Brookesia_AppLauncher::calibrateData(const ESP_Brookesia_StyleSize_t &screen_size, const ESP_Brookesia_CoreHome &home,

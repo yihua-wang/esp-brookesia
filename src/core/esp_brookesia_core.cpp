@@ -92,7 +92,7 @@ bool ESP_Brookesia_Core::sendDataUpdateEvent(void *param) const
 {
     ESP_BROOKESIA_CHECK_FALSE_RETURN(checkCoreInitialized(), false, "Core is not initialized");
 
-    ESP_BROOKESIA_CHECK_FALSE_RETURN(lv_event_send(_event_obj.get(), _data_update_event_code, param) == LV_RES_OK, false,
+    ESP_BROOKESIA_CHECK_FALSE_RETURN(lv_obj_send_event(_event_obj.get(), _data_update_event_code, param) == LV_RES_OK, false,
                                      "Send data update event failed");
 
     return true;
@@ -123,7 +123,7 @@ bool ESP_Brookesia_Core::sendNavigateEvent(ESP_Brookesia_CoreNavigateType_t type
 {
     ESP_BROOKESIA_CHECK_FALSE_RETURN(checkCoreInitialized(), false, "Core is not initialized");
 
-    ESP_BROOKESIA_CHECK_FALSE_RETURN(lv_event_send(_event_obj.get(), _navigate_event_code, (void *)type) == LV_RES_OK, false,
+    ESP_BROOKESIA_CHECK_FALSE_RETURN(lv_obj_send_event(_event_obj.get(), _navigate_event_code, (void *)type) == LV_RES_OK, false,
                                      "Send navigate event failed");
 
     return true;
@@ -154,7 +154,7 @@ bool ESP_Brookesia_Core::sendAppEvent(const ESP_Brookesia_CoreAppEventData_t *da
 {
     ESP_BROOKESIA_CHECK_FALSE_RETURN(checkCoreInitialized(), false, "Core is not initialized");
 
-    ESP_BROOKESIA_CHECK_FALSE_RETURN(lv_event_send(_event_obj.get(), _app_event_code, (void *)data) == LV_RES_OK, false,
+    ESP_BROOKESIA_CHECK_FALSE_RETURN(lv_obj_send_event(_event_obj.get(), _app_event_code, (void *)data) == LV_RES_OK, false,
                                      "Send app start event failed");
 
     return true;

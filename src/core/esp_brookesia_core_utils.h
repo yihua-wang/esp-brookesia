@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <string.h>
 #include "lvgl.h"
 #include "esp_brookesia_conf_internal.h"
 #include "esp_brookesia_core_type.h"

@@ -35,7 +35,7 @@ public:
     ESP_Brookesia_CoreApp *getRunningAppByIdenx(uint8_t index);
     ESP_Brookesia_CoreApp *getRunningAppById(int id);
     ESP_Brookesia_CoreApp *getActiveApp(void) const { return _active_app; }
-    const lv_img_dsc_t *getAppSnapshot(int id);
+    const lv_image_dsc_t *getAppSnapshot(int id);
     // *INDENT-OFF*
 
 protected:
@@ -65,8 +65,8 @@ private:
     static void onNavigationEventCallback(lv_event_t *event);
 
     typedef struct {
-        uint8_t *image_buffer;
-        lv_img_dsc_t image_resource;
+        lv_draw_buf_t* draw_buf;
+        lv_image_dsc_t image_resource;
     } ESP_Brookesia_AppSnapshot_t;
 
     // App

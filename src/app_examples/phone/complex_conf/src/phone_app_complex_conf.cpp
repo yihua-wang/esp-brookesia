@@ -14,7 +14,7 @@ PhoneAppComplexConf::PhoneAppComplexConf(bool use_status_bar, bool use_navigatio
     ESP_Brookesia_PhoneApp(
         {
             .name = "Complex Conf",
-            .launcher_icon = ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_large_app_launcher_default_112_112),
+            .launcher_icon = ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_middle_app_launcher_default_112_112),
             .screen_size = ESP_BROOKESIA_STYLE_SIZE_RECT_PERCENT(100, 100),
             .flags = {
                 .enable_default_screen = 1,
@@ -30,7 +30,7 @@ PhoneAppComplexConf::PhoneAppComplexConf(bool use_status_bar, bool use_navigatio
                 .icon = {
                     .image_num = 1,
                     .images = {
-                        ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_large_app_launcher_default_112_112),
+                        ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_middle_app_launcher_default_112_112),
                     },
                 },
             },
@@ -51,7 +51,7 @@ PhoneAppComplexConf::PhoneAppComplexConf():
     ESP_Brookesia_PhoneApp(
         {
             .name = "Complex Conf",
-            .launcher_icon = ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_large_app_launcher_default_112_112),
+            .launcher_icon = ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_middle_app_launcher_default_112_112),
             .screen_size = ESP_BROOKESIA_STYLE_SIZE_RECT_PERCENT(100, 100),
             .flags = {
                 .enable_default_screen = 1,
@@ -67,7 +67,7 @@ PhoneAppComplexConf::PhoneAppComplexConf():
                 .icon = {
                     .image_num = 1,
                     .images = {
-                        ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_large_app_launcher_default_112_112),
+                        ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_middle_app_launcher_default_112_112),
                     },
                 },
             },

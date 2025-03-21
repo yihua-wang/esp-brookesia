@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <algorithm>
+#include "lvgl/src/misc/lv_timer_private.h" 
 #include "esp_brookesia_navigation_bar.hpp"
 
 using namespace std;
@@ -94,7 +95,7 @@ bool ESP_Brookesia_NavigationBar::begin(lv_obj_t *parent)
         lv_obj_add_style(button_objs[i].get(), _core.getCoreHome().getCoreContainerStyle(), 0);
         lv_obj_set_style_bg_opa(button_objs[i].get(), LV_OPA_TRANSP, 0);
         lv_obj_add_flag(button_objs[i].get(), LV_OBJ_FLAG_CLICKABLE);
-        lv_obj_clear_flag(button_objs[i].get(), LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_PRESS_LOCK);
+        lv_obj_clear_flag(button_objs[i].get(), (lv_obj_flag_t)(LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_PRESS_LOCK));
         lv_obj_add_event_cb(button_objs[i].get(), onIconTouchEventCallback, LV_EVENT_PRESSED, this);
         lv_obj_add_event_cb(button_objs[i].get(), onIconTouchEventCallback, LV_EVENT_PRESSING, this);
         lv_obj_add_event_cb(button_objs[i].get(), onIconTouchEventCallback, LV_EVENT_PRESS_LOST, this);
@@ -103,12 +104,12 @@ bool ESP_Brookesia_NavigationBar::begin(lv_obj_t *parent)
         // Icon object
         lv_obj_add_style(icon_main_objs[i].get(), _core.getCoreHome().getCoreContainerStyle(), 0);
         lv_obj_align(icon_main_objs[i].get(), LV_ALIGN_CENTER, 0, 0);
-        lv_obj_clear_flag(icon_main_objs[i].get(), LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE);
+        lv_obj_clear_flag(icon_main_objs[i].get(), (lv_obj_flag_t)(LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE));
         // Icon image
         lv_obj_add_style(icon_image_objs[i].get(), _core.getCoreHome().getCoreContainerStyle(), 0);
         lv_obj_align(icon_image_objs[i].get(), LV_ALIGN_CENTER, 0, 0);
         lv_obj_set_size(icon_image_objs[i].get(), LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-        lv_img_set_size_mode(icon_image_objs[i].get(), LV_IMG_SIZE_MODE_REAL);
+        // todo: lv_img_set_size_mode(icon_image_objs[i].get(), LV_IMAGE_SIZE_MODE_VIRTUAL);
         lv_obj_clear_flag(icon_image_objs[i].get(), LV_OBJ_FLAG_CLICKABLE);
     }
     /* Visual flex */
@@ -341,7 +342,7 @@ bool ESP_Brookesia_NavigationBar::updateByNewData(void)
 {
     float h_factor = 0;
     float w_factor = 0;
-    lv_img_dsc_t *icon_image_resource = nullptr;
+    lv_image_dsc_t *icon_image_resource = nullptr;
 
     ESP_BROOKESIA_LOGD("Update(0x%p)", this);
     ESP_BROOKESIA_CHECK_FALSE_RETURN(checkInitialized(), false, "Not initialized");
@@ -361,7 +362,7 @@ bool ESP_Brookesia_NavigationBar::updateByNewData(void)
         // Icon main
         lv_obj_set_size(_icon_main_objs[i].get(), _data.button.icon_size.width, _data.button.icon_size.height);
         // Icon image
-        icon_image_resource = (lv_img_dsc_t *)_data.button.icon_images[i].resource;
+        icon_image_resource = (lv_image_dsc_t *)_data.button.icon_images[i].resource;
         lv_img_set_src(_icon_image_objs[i].get(), icon_image_resource);
         lv_obj_set_style_img_recolor(_icon_image_objs[i].get(),
                                      lv_color_hex(_data.button.icon_images[i].recolor.color), 0);
@@ -373,9 +374,9 @@ bool ESP_Brookesia_NavigationBar::updateByNewData(void)
         // Scale the image to a suitable size.
         // So you don’t have to consider the size of the source image.
         if (h_factor < w_factor) {
-            lv_img_set_zoom(_icon_image_objs[i].get(), (int)(h_factor * LV_IMG_ZOOM_NONE));
+            lv_img_set_zoom(_icon_image_objs[i].get(), (int)(h_factor * LV_ZOOM_NONE));
         } else {
-            lv_img_set_zoom(_icon_image_objs[i].get(), (int)(w_factor * LV_IMG_ZOOM_NONE));
+            lv_img_set_zoom(_icon_image_objs[i].get(), (int)(w_factor * LV_ZOOM_NONE));
         }
         lv_obj_refr_size(_icon_image_objs[i].get());
     }
@@ -541,7 +542,7 @@ void ESP_Brookesia_NavigationBar::onIconTouchEventCallback(lv_event_t *event)
     ESP_BROOKESIA_CHECK_NULL_EXIT(event, "Invalid event object");
 
     event_code = lv_event_get_code(event);
-    button_obj = lv_event_get_current_target(event);
+    button_obj = (lv_obj_t*)lv_event_get_current_target(event);
     navigation_bar = (ESP_Brookesia_NavigationBar *)lv_event_get_user_data(event);
     ESP_BROOKESIA_CHECK_FALSE_EXIT(event_code < _LV_EVENT_LAST, "Invalid event code");
     ESP_BROOKESIA_CHECK_NULL_EXIT(button_obj, "Invalid button object");
@@ -618,7 +619,7 @@ void ESP_Brookesia_NavigationBar::onVisualFlexHideAnimationReadyCallback(lv_anim
 
 void ESP_Brookesia_NavigationBar::onVisualFlexHideTimerCallback(lv_timer_t *timer)
 {
-    ESP_Brookesia_NavigationBar *navigation_bar = static_cast<ESP_Brookesia_NavigationBar *>(timer->user_data);
+    ESP_Brookesia_NavigationBar *navigation_bar = (ESP_Brookesia_NavigationBar* )lv_timer_get_user_data(timer);
 
     ESP_BROOKESIA_LOGD("Flex hide timer callback");
     ESP_BROOKESIA_CHECK_NULL_EXIT(navigation_bar, "Invalid var");
