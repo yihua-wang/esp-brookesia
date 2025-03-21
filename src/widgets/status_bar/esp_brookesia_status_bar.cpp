@@ -271,7 +271,7 @@ bool ESP_Brookesia_StatusBar::calibrateData(const ESP_Brookesia_StyleSize_t &scr
 
 bool ESP_Brookesia_StatusBar::beginMain(lv_obj_t *parent)
 {
-    lv_align_t area_align = 0;
+    lv_align_t area_align = LV_ALIGN_DEFAULT;
     ESP_Brookesia_LvObj_t main_obj = nullptr;
     ESP_Brookesia_LvObj_t area_obj = nullptr;
     vector<ESP_Brookesia_LvObj_t> area_objs;

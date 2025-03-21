@@ -27,10 +27,10 @@
 #include "systems/phone/esp_brookesia_phone_type.h"
 
 /* Squareline */
-#ifdef ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_HELPERS
+#if ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_HELPERS
 #include "squareline/ui_helpers/ui_helpers.h"
 #endif
-#ifdef ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_COMP
+#if ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_COMP
 #include "squareline/ui_comp/ui_comp.h"
 #endif
 

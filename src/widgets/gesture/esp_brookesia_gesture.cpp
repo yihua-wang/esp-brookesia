@@ -5,6 +5,8 @@
  */
 #include <limits>
 #include <cmath>
+#include "lvgl/src/misc/lv_timer_private.h" 
+#include "lvgl/src/indev/lv_indev_private.h"
 #include "esp_brookesia_gesture.hpp"
 
 #if !ESP_BROOKESIA_LOG_ENABLE_DEBUG_WIDGETS_GESTURE
@@ -103,13 +105,13 @@ bool ESP_Brookesia_Gesture::begin(lv_obj_t *parent)
     /* Setup objects */
     // Event mask
     lv_obj_add_style(event_mask_obj.get(), core.getCoreHome().getCoreContainerStyle(), 0);
-    lv_obj_add_flag(event_mask_obj.get(), LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(event_mask_obj.get(), (lv_obj_flag_t)(LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_HIDDEN));
     lv_obj_center(event_mask_obj.get());
     // Indicator bar
     for (int i = 0; i < ESP_BROOKESIA_GESTURE_INDICATOR_BAR_TYPE_MAX; i++) {
         // Bar
         lv_obj_add_style(indicator_bars[i].get(), core.getCoreHome().getCoreContainerStyle(), 0);
-        lv_obj_clear_flag(indicator_bars[i].get(), LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_clear_flag(indicator_bars[i].get(), (lv_obj_flag_t)(LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE));
         lv_obj_add_flag(indicator_bars[i].get(), LV_OBJ_FLAG_HIDDEN);
         lv_bar_set_range(indicator_bars[i].get(), 0, 100);
         lv_bar_set_start_value(indicator_bars[i].get(), 0, LV_ANIM_OFF);
@@ -165,7 +167,7 @@ bool ESP_Brookesia_Gesture::readTouchPoint(int &x, int &y) const
 
     ESP_BROOKESIA_CHECK_FALSE_RETURN(checkInitialized(), false, "Not initialized");
 
-    if (_touch_device->proc.state != LV_INDEV_STATE_PR) {
+    if (_touch_device->state != LV_INDEV_STATE_PR) {
         return false;
     }
 
@@ -493,7 +495,7 @@ void ESP_Brookesia_Gesture::onDataUpdateEventCallback(lv_event_t *event)
     ESP_BROOKESIA_CHECK_FALSE_EXIT(gesture->updateByNewData(), "Update gesture object style failed");
 }
 
-void ESP_Brookesia_Gesture::onTouchDetectTimerCallback(struct _lv_timer_t *t)
+void ESP_Brookesia_Gesture::onTouchDetectTimerCallback(lv_timer_t *t)
 {
     bool touched = false;
     int distance_x = 0;
@@ -501,7 +503,7 @@ void ESP_Brookesia_Gesture::onTouchDetectTimerCallback(struct _lv_timer_t *t)
     float distance_tan = numeric_limits<float>::infinity();
     lv_event_code_t event_code = LV_EVENT_ALL;
 
-    ESP_Brookesia_Gesture *gesture = (ESP_Brookesia_Gesture *)t->user_data;
+    ESP_Brookesia_Gesture *gesture = (ESP_Brookesia_Gesture *)lv_timer_get_user_data(t);
     ESP_BROOKESIA_CHECK_NULL_EXIT(gesture, "Invalid gesture");
 
     const ESP_Brookesia_GestureData_t &data = gesture->data;
@@ -606,7 +608,7 @@ event_process:
     }
 
     gesture->_event_data = info;
-    lv_event_send(gesture->_event_mask_obj.get(), event_code, (void *)&gesture->_event_data);
+    lv_obj_send_event(gesture->_event_mask_obj.get(), event_code, (void *)&gesture->_event_data);
     if (event_code == gesture->_release_event_code) {
         gesture->resetGestureInfo();
     }

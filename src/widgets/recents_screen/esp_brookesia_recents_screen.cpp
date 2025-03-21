@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <cmath>
+#include "lvgl/src/misc/lv_area_private.h"
 #include "esp_brookesia_conf_internal.h"
 #include "esp_brookesia_recents_screen.hpp"
 
@@ -21,8 +22,8 @@ ESP_Brookesia_RecentsScreen::ESP_Brookesia_RecentsScreen(ESP_Brookesia_Core &cor
     _core(core),
     _data(data),
     _is_trash_pressed_losted(false),
-    _trash_icon_default_zoom(LV_IMG_ZOOM_NONE),
-    _trash_icon_press_zoom(LV_IMG_ZOOM_NONE),
+    _trash_icon_default_zoom(LV_ZOOM_NONE),
+    _trash_icon_press_zoom(LV_ZOOM_NONE),
     _main_obj(nullptr),
     _memory_obj(nullptr),
     _memory_label(nullptr),
@@ -103,7 +104,7 @@ bool ESP_Brookesia_RecentsScreen::begin(lv_obj_t *parent)
     lv_obj_center(trash_icon.get());
     lv_obj_add_style(trash_icon.get(), _core.getCoreHome().getCoreContainerStyle(), 0);
     lv_obj_set_size(trash_icon.get(), LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_img_set_size_mode(trash_icon.get(), LV_IMG_SIZE_MODE_REAL);
+    // todo: lv_img_set_size_mode(trash_icon.get(), LV_IMG_SIZE_MODE_REAL);
     lv_obj_add_flag(trash_icon.get(), LV_OBJ_FLAG_CLICKABLE);
     lv_obj_clear_flag(trash_icon.get(), LV_OBJ_FLAG_PRESS_LOCK);
     lv_obj_add_event_cb(trash_icon.get(), onTrashTouchEventCallback, LV_EVENT_CLICKED, this);
@@ -314,11 +315,11 @@ bool ESP_Brookesia_RecentsScreen::checkPointInsideMain(lv_point_t &point) const
 
     lv_obj_refr_pos(_main_obj.get());
     lv_obj_get_coords(_main_obj.get(), &area);
-    point_in_main = _lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(_main_obj.get(), 0));
+    point_in_main = lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(_main_obj.get(), 0));
 
     lv_obj_refr_pos(_trash_obj.get());
     lv_obj_get_coords(_trash_obj.get(), &area);
-    point_in_trash = _lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(_trash_obj.get(), 0));
+    point_in_trash = lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(_trash_obj.get(), 0));
 
     return point_in_main && !point_in_trash;
 }
@@ -333,7 +334,7 @@ bool ESP_Brookesia_RecentsScreen::checkPointInsideTable(lv_point_t &point) const
     lv_obj_refr_pos(_snapshot_table.get());
     lv_obj_get_coords(_snapshot_table.get(), &area);
 
-    return _lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(_snapshot_table.get(), 0));
+    return lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(_snapshot_table.get(), 0));
 }
 
 bool ESP_Brookesia_RecentsScreen::checkPointInsideSnapshot(int id, lv_point_t &point) const
@@ -350,7 +351,7 @@ bool ESP_Brookesia_RecentsScreen::checkPointInsideSnapshot(int id, lv_point_t &p
     lv_obj_refr_pos(snapshot_main_obj);
     lv_obj_get_coords(snapshot_main_obj, &area);
 
-    return _lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(snapshot_main_obj, 0));
+    return lv_area_is_point_on(&area, &point, lv_obj_get_style_radius(snapshot_main_obj, 0));
 }
 
 int ESP_Brookesia_RecentsScreen::getSnapshotOriginY(int id) const
@@ -549,24 +550,24 @@ bool ESP_Brookesia_RecentsScreen::updateByNewData(void)
     lv_obj_set_style_img_recolor(_trash_icon.get(), lv_color_hex(_data.trash_icon.image.recolor.color), 0);
     lv_obj_set_style_img_recolor_opa(_trash_icon.get(), _data.trash_icon.image.recolor.opacity, 0);
     h_factor = (float)(_data.trash_icon.default_size.height) /
-               ((lv_img_dsc_t *)_data.trash_icon.image.resource)->header.h;
+               ((lv_image_dsc_t *)_data.trash_icon.image.resource)->header.h;
     w_factor = (float)(_data.trash_icon.default_size.width) /
-               ((lv_img_dsc_t *)_data.trash_icon.image.resource)->header.w;
+               ((lv_image_dsc_t *)_data.trash_icon.image.resource)->header.w;
     if (h_factor < w_factor) {
-        _trash_icon_default_zoom = (int)(h_factor * LV_IMG_ZOOM_NONE);
+        _trash_icon_default_zoom = (int)(h_factor * LV_ZOOM_NONE);
         lv_img_set_zoom(_trash_icon.get(), _trash_icon_default_zoom);
     } else {
-        _trash_icon_default_zoom = (int)(w_factor * LV_IMG_ZOOM_NONE);
+        _trash_icon_default_zoom = (int)(w_factor * LV_ZOOM_NONE);
         lv_img_set_zoom(_trash_icon.get(), _trash_icon_default_zoom);
     }
     h_factor = (float)(_data.trash_icon.press_size.height) /
-               ((lv_img_dsc_t *)_data.trash_icon.image.resource)->header.h;
+               ((lv_image_dsc_t *)_data.trash_icon.image.resource)->header.h;
     w_factor = (float)(_data.trash_icon.press_size.width) /
-               ((lv_img_dsc_t *)_data.trash_icon.image.resource)->header.w;
+               ((lv_image_dsc_t *)_data.trash_icon.image.resource)->header.w;
     if (h_factor < w_factor) {
-        _trash_icon_press_zoom = (int)(h_factor * LV_IMG_ZOOM_NONE);
+        _trash_icon_press_zoom = (int)(h_factor * LV_ZOOM_NONE);
     } else {
-        _trash_icon_press_zoom = (int)(w_factor * LV_IMG_ZOOM_NONE);
+        _trash_icon_press_zoom = (int)(w_factor * LV_ZOOM_NONE);
     }
     lv_obj_refr_size(_trash_icon.get());
 
@@ -610,18 +611,18 @@ void ESP_Brookesia_RecentsScreen::onTrashTouchEventCallback(lv_event_t *event)
         // Since the snapshot may be deleted during the loop, we need to copy the map first
         id_snapshot_map = recents_screen->_id_snapshot_map;
         for (auto &it : id_snapshot_map) {
-            lv_event_send(recents_screen->getEventObject(), recents_screen->getSnapshotDeletedEventCode(),
+            lv_obj_send_event(recents_screen->getEventObject(), recents_screen->getSnapshotDeletedEventCode(),
                           reinterpret_cast<void *>(it.first));
         }
         // Send this event to notify that trash icon is clicked
-        lv_event_send(recents_screen->getEventObject(), recents_screen->getSnapshotDeletedEventCode(),
+        lv_obj_send_event(recents_screen->getEventObject(), recents_screen->getSnapshotDeletedEventCode(),
                       reinterpret_cast<void *>(0));
         break;
     case LV_EVENT_PRESSED:
         ESP_BROOKESIA_LOGD("Pressed");
         // Zoom out icon
-        lv_img_set_zoom(lv_event_get_target(event), recents_screen->_trash_icon_press_zoom);
-        lv_obj_refr_size(lv_event_get_target(event));
+        lv_img_set_zoom((lv_obj_t*)lv_event_get_target(event), recents_screen->_trash_icon_press_zoom);
+        lv_obj_refr_size((lv_obj_t*)lv_event_get_target(event));
         recents_screen->_is_trash_pressed_losted = false;
         break;
     case LV_EVENT_PRESS_LOST:
@@ -631,8 +632,8 @@ void ESP_Brookesia_RecentsScreen::onTrashTouchEventCallback(lv_event_t *event)
     case LV_EVENT_RELEASED:
         ESP_BROOKESIA_LOGD("Released");
         // Zoom in icon
-        lv_img_set_zoom(lv_event_get_target(event), recents_screen->_trash_icon_default_zoom);
-        lv_obj_refr_size(lv_event_get_target(event));
+        lv_img_set_zoom((lv_obj_t*)lv_event_get_target(event), recents_screen->_trash_icon_default_zoom);
+        lv_obj_refr_size((lv_obj_t*)lv_event_get_target(event));
         break;
     default:
         break;
