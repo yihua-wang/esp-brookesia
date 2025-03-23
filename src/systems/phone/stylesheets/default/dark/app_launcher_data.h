@@ -22,7 +22,7 @@ extern "C" {
             .press_size = ESP_BROOKESIA_STYLE_SIZE_SQUARE(88),   \
         },                                                        \
         .label = {                                                \
-            .text_font = ESP_BROOKESIA_STYLE_FONT_SIZE(16),              \
+            .text_font = ESP_BROOKESIA_STYLE_FONT_SIZE(18),              \
             .text_color = ESP_BROOKESIA_STYLE_COLOR(0xFFFFFF),           \
         },                                                        \
     }
@@ -48,7 +48,7 @@ extern "C" {
         },                                                                  \
         .icon = ESP_BROOKESIA_PHONE_DEFAULT_DARK_APP_LAUNCHER_ICON_DATA(),         \
         .flags = {                                                          \
-            .enable_table_scroll_anim = 0,                                  \
+            .enable_table_scroll_anim = 1,                                  \
         },                                                                  \
     }
 

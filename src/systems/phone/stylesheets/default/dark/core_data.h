@@ -21,29 +21,9 @@ extern "C" {
             .wallpaper_image_resource = NULL,                                           \
         },                                                                              \
         .text = {                                                                       \
-            .default_fonts_num = 21,                                                    \
+            .default_fonts_num = 1,                                                    \
             .default_fonts = {                                                          \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(8, &esp_brookesia_font_maison_neue_book_8),      \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(10, &esp_brookesia_font_maison_neue_book_10),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(12, &esp_brookesia_font_maison_neue_book_12),    \
                 ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(14, &esp_brookesia_font_maison_neue_book_14),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(16, &esp_brookesia_font_maison_neue_book_16),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(18, &esp_brookesia_font_maison_neue_book_18),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(20, &esp_brookesia_font_maison_neue_book_20),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(22, &esp_brookesia_font_maison_neue_book_22),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(24, &esp_brookesia_font_maison_neue_book_24),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(26, &esp_brookesia_font_maison_neue_book_26),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(28, &esp_brookesia_font_maison_neue_book_28),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(30, &esp_brookesia_font_maison_neue_book_30),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(32, &esp_brookesia_font_maison_neue_book_32),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(34, &esp_brookesia_font_maison_neue_book_34),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(36, &esp_brookesia_font_maison_neue_book_36),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(38, &esp_brookesia_font_maison_neue_book_38),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(40, &esp_brookesia_font_maison_neue_book_40),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(42, &esp_brookesia_font_maison_neue_book_42),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(44, &esp_brookesia_font_maison_neue_book_44),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(46, &esp_brookesia_font_maison_neue_book_46),    \
-                ESP_BROOKESIA_STYLE_FONT_CUSTOM_SIZE(48, &esp_brookesia_font_maison_neue_book_48),    \
             },                                                                          \
         },                                                                              \
         .container = {                                                                  \

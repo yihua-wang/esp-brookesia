@@ -5,11 +5,13 @@
  */
 #include <algorithm>
 #if __has_include("src/misc/lv_ll.h")
-#include "src/misc/lv_ll.h"
-#include "src/misc/lv_gc.h"
+#include "lvgl/src/misc/lv_ll.h"
+#include "lvgl/src/display/lv_display_private.h"
+#include "lvgl/src/misc/lv_timer_private.h" 
+#include "lvgl/src/core/lv_obj_private.h"
+#include "lvgl/src/core/lv_global.h"
 #else
 #include "misc/lv_ll.h"
-#include "misc/lv_gc.h"
 #endif
 #include "esp_brookesia_core_utils.h"
 #include "esp_brookesia_core.hpp"
@@ -21,6 +23,7 @@
 #endif
 
 #define RESOURCE_LOOP_COUNT_MAX     (1000)
+#define LV_ANIM_LL (LV_GLOBAL_DEFAULT()->anim_state.anim_ll)
 
 using namespace std;
 
@@ -85,7 +88,7 @@ bool ESP_Brookesia_CoreApp::notifyCoreClosed(void) const
     ESP_BROOKESIA_CHECK_FALSE_RETURN(event_obj != nullptr, false, "Event object is invalid");
     ESP_BROOKESIA_CHECK_FALSE_RETURN(esp_brookesia_core_utils_check_event_code_valid(event_code), false, "Event code is invalid");
 
-    res = lv_event_send(event_obj, event_code, &event_data);
+    res = lv_obj_send_event(event_obj, event_code, &event_data);
     ESP_BROOKESIA_CHECK_FALSE_RETURN(res == LV_RES_OK, false, "Send app closed event failed");
 
     return true;
@@ -115,14 +118,14 @@ bool ESP_Brookesia_CoreApp::startRecordResource(void)
     if (_core_active_data.flags.enable_resize_visual_area) {
         ESP_BROOKESIA_LOGD("Resieze screen to visual area[(%d,%d)-(%d,%d)]", visual_area.x1, visual_area.y1, visual_area.x2,
                            visual_area.y2);
-        _display_style.w = disp->driver->hor_res;
-        _display_style.h = disp->driver->ver_res;
-        disp->driver->hor_res = visual_area.x2 - visual_area.x1 + 1;
-        disp->driver->ver_res = visual_area.y2 - visual_area.y1 + 1;
+        _display_style.w = disp->hor_res;
+        _display_style.h = disp->ver_res;
+        disp->hor_res = visual_area.x2 - visual_area.x1 + 1;
+        disp->ver_res = visual_area.y2 - visual_area.y1 + 1;
     }
     _resource_head_screen_index = disp->screen_cnt - 1;
     _resource_head_timer = lv_timer_get_next(nullptr);
-    _resource_head_anim = (lv_anim_t *)_lv_ll_get_head(&LV_GC_ROOT(_lv_anim_ll));
+    _resource_head_anim = (lv_anim_t *)lv_ll_get_head(&LV_ANIM_LL);
     _flags.is_resource_recording = true;
 
     return true;
@@ -209,7 +212,7 @@ bool ESP_Brookesia_CoreApp::endRecordResource(void)
     }
 
     // Animation
-    anim_node = (lv_anim_t *)_lv_ll_get_head(&LV_GC_ROOT(_lv_anim_ll));
+    anim_node = (lv_anim_t *)lv_ll_get_head(&LV_ANIM_LL);
     while ((anim_node != nullptr) && (anim_node != _resource_head_anim)) {
         // Record or update the record information of the animation
         _resource_anims_var_exec_map[anim_node] = {anim_node->var, anim_node->exec_cb};
@@ -220,7 +223,7 @@ bool ESP_Brookesia_CoreApp::endRecordResource(void)
         } else {
             ESP_BROOKESIA_LOGD("Animation(@0x%p) is already recorded", anim_node);
         }
-        anim_node = (lv_anim_t *)_lv_ll_get_next(&LV_GC_ROOT(_lv_anim_ll), anim_node);
+        anim_node = (lv_anim_t *)lv_ll_get_next(&LV_ANIM_LL, anim_node);
     }
     if ((anim_node == nullptr) && (_resource_head_anim != nullptr)) {
         _resource_anims.clear();
@@ -233,8 +236,8 @@ bool ESP_Brookesia_CoreApp::endRecordResource(void)
 
     if (_core_active_data.flags.enable_resize_visual_area) {
         ESP_BROOKESIA_LOGD("Resize screen back to display size(%d x %d)", _display_style.w, _display_style.h);
-        disp->driver->hor_res = _display_style.w;
-        disp->driver->ver_res = _display_style.h;
+        disp->hor_res = _display_style.w;
+        disp->ver_res = _display_style.h;
     }
     _flags.is_resource_recording = false;
 
@@ -328,7 +331,7 @@ bool ESP_Brookesia_CoreApp::cleanRecordResource(void)
     // Animation
     resource_loop_count = 0;
     resource_clean_count = 0;
-    anim_node = (lv_anim_t *)_lv_ll_get_head(&LV_GC_ROOT(_lv_anim_ll));
+    anim_node = (lv_anim_t *)lv_ll_get_head(&LV_ANIM_LL);
     while ((anim_node != nullptr) && (_resource_anims.size() > 0) &&
             (resource_loop_count++ < RESOURCE_LOOP_COUNT_MAX)) {
         do_clean = false;
@@ -353,8 +356,8 @@ bool ESP_Brookesia_CoreApp::cleanRecordResource(void)
                 _resource_anims_var_exec_map.erase(anim_map_it);
             }
         }
-        anim_node = do_clean ? (lv_anim_t *)_lv_ll_get_head(&LV_GC_ROOT(_lv_anim_ll)) :
-                    (lv_anim_t *)_lv_ll_get_next(&LV_GC_ROOT(_lv_anim_ll), anim_node);
+        anim_node = do_clean ? (lv_anim_t *)lv_ll_get_head(&LV_ANIM_LL) :
+                    (lv_anim_t *)lv_ll_get_next(&LV_ANIM_LL, anim_node);
     }
     if (resource_loop_count >= RESOURCE_LOOP_COUNT_MAX) {
         ret = false;

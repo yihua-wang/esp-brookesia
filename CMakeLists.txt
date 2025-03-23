@@ -36,7 +36,7 @@ list(APPEND SRCS_C ${SQUARELINE_SRCS_C})
 
 idf_component_register(
     SRCS ${SRCS_C} ${SRCS_CPP}
-    INCLUDE_DIRS ${PROJ_SRC_DIR})
+    INCLUDE_DIRS ${PROJ_SRC_DIR} REQUIRES "lvgl")
 
 set_source_files_properties(
     ${SRCS_CPP}
@@ -50,4 +50,4 @@ set_source_files_properties(
         COMPILE_FLAGS "-Wno-unused-variable"
 )
 
-target_compile_definitions(${COMPONENT_LIB} PRIVATE -DLV_LVGL_H_INCLUDE_SIMPLE)
+target_compile_definitions(${COMPONENT_LIB} PRIVATE)

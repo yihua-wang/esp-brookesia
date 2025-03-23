@@ -30,7 +30,11 @@
  *      - ESP_BROOKESIA_LOG_LEVEL_NONE:  No log output (least verbose)
  *
  */
+#ifdef ESP_PLATFORM
 #define ESP_BROOKESIA_LOG_LEVEL        (ESP_BROOKESIA_LOG_LEVEL_INFO)
+#else
+#define ESP_BROOKESIA_LOG_LEVEL        (ESP_BROOKESIA_LOG_LEVEL_DEBUG)
+#endif
 
 /* Enable debug logs for modules */
 #define ESP_BROOKESIA_LOG_ENABLE_DEBUG_CORE                (1)
@@ -84,7 +88,7 @@
  * that include duplicate "ui_helpers.c" and "ui_helpers.h".
  *
  */
-#define ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_HELPERS   (1)
+#define ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_HELPERS   (0)
 #if ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_HELPERS
 /**
  * Please uncomment one of the options below based on the version of Squareline Studio you are using and the corresponding
@@ -109,7 +113,7 @@
  * that include duplicate APIs of "ui_comp.c" and "ui_comp.h".
  *
  */
-#define ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_COMP   (1)
+#define ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_COMP   (0)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////// File Version ///////////////////////////////////////////////////////////

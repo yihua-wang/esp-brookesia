@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <cmath>
+#include "lvgl/src/core/lv_obj_private.h"
 #include "esp_brookesia_core_manager.hpp"
 #include "esp_brookesia_core.hpp"
 #include "esp_brookesia_conf_internal.h"
@@ -317,8 +318,6 @@ bool ESP_Brookesia_CoreManager::saveAppSnapshot(ESP_Brookesia_CoreApp *app)
     ESP_BROOKESIA_CHECK_FALSE_RETURN(false, false, "`LV_USE_SNAPSHOT` is not enabled");
 #else
     bool resize_app_screen = false;
-    uint8_t *snapshot_buffer = nullptr;
-    uint32_t snapshot_buffer_size = 0;
     lv_res_t ret = LV_RES_INV;
     lv_area_t app_screen_area = {};
     shared_ptr<ESP_Brookesia_AppSnapshot_t> snapshot = nullptr;
@@ -344,29 +343,17 @@ bool ESP_Brookesia_CoreManager::saveAppSnapshot(ESP_Brookesia_CoreApp *app)
     snapshot = (it != _id_app_snapshot_map.end()) ? it->second : nullptr;
 
     // Malloc snapshot buffer if no buffer or buffer size changed
-    snapshot_buffer_size = lv_snapshot_buf_size_needed(app->_active_screen, LV_IMG_CF_TRUE_COLOR);
     if (snapshot == nullptr) {
         snapshot = make_shared<ESP_Brookesia_AppSnapshot_t>();
         ESP_BROOKESIA_CHECK_NULL_GOTO(snapshot, err, "Make snapshot object failed");
-
-        snapshot_buffer = (uint8_t *)ESP_BROOKESIA_MEMORY_MALLOC(snapshot_buffer_size);
-        ESP_BROOKESIA_CHECK_NULL_GOTO(snapshot_buffer, err, "Alloc snapshot buffer(%d) fail", (int)snapshot_buffer_size);
-
-        snapshot->image_buffer = snapshot_buffer;
-    } else if (snapshot_buffer_size != snapshot->image_resource.data_size) {
-        ESP_BROOKESIA_MEMORY_FREE(snapshot->image_buffer);
-        snapshot->image_buffer = nullptr;
-
-        snapshot_buffer = (uint8_t *)ESP_BROOKESIA_MEMORY_MALLOC(snapshot_buffer_size);
-        ESP_BROOKESIA_CHECK_NULL_GOTO(snapshot_buffer, err, "Realloc snapshot buffer(%d) fail", (int)snapshot_buffer_size);
-
-        snapshot->image_buffer = snapshot_buffer;
     }
 
     // And take snapshot for recent screen
-    ret = lv_snapshot_take_to_buf(app->_active_screen, LV_IMG_CF_TRUE_COLOR, &snapshot->image_resource,
-                                  snapshot->image_buffer, snapshot_buffer_size);
-    ESP_BROOKESIA_CHECK_FALSE_GOTO(ret == LV_RES_OK, err, "Take snapshot fail");
+    snapshot->draw_buf = lv_snapshot_take(app->_active_screen, LV_COLOR_FORMAT_RGB565);
+    ESP_BROOKESIA_CHECK_FALSE_GOTO(snapshot->draw_buf != nullptr, err, "Take snapshot fail");
+    snapshot->image_resource.data = snapshot->draw_buf->data;
+    snapshot->image_resource.data_size = snapshot->draw_buf->data_size;
+    snapshot->image_resource.header = snapshot->draw_buf->header;
 
     _id_app_snapshot_map[app->_id] = snapshot;
     if (resize_app_screen) {
@@ -376,7 +363,6 @@ bool ESP_Brookesia_CoreManager::saveAppSnapshot(ESP_Brookesia_CoreApp *app)
     return true;
 
 err:
-    ESP_BROOKESIA_MEMORY_FREE(snapshot_buffer);
     if (resize_app_screen) {
         app->_active_screen->coords = app_screen_area;
     }
@@ -396,7 +382,7 @@ bool ESP_Brookesia_CoreManager::releaseAppSnapshot(ESP_Brookesia_CoreApp *app)
     }
 
     ESP_BROOKESIA_CHECK_NULL_RETURN(it->second, false, "Invalid snapshot object");
-    ESP_BROOKESIA_MEMORY_FREE(it->second->image_buffer);
+    if (it->second->draw_buf) lv_draw_buf_destroy(it->second->draw_buf);
     ESP_BROOKESIA_CHECK_FALSE_RETURN(_id_app_snapshot_map.erase(app->_id) > 0, false, "Free snapshot failed");
 
     return true;
@@ -467,7 +453,7 @@ ESP_Brookesia_CoreApp *ESP_Brookesia_CoreManager::getRunningAppById(int id)
     return nullptr;
 }
 
-const lv_img_dsc_t *ESP_Brookesia_CoreManager::getAppSnapshot(int id)
+const lv_image_dsc_t *ESP_Brookesia_CoreManager::getAppSnapshot(int id)
 {
     auto it = _id_app_snapshot_map.find(id);
     ESP_BROOKESIA_CHECK_FALSE_RETURN(it != _id_app_snapshot_map.end(), nullptr, "App not found in running app list");

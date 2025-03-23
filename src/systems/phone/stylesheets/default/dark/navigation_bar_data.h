@@ -23,9 +23,9 @@ extern "C" {
         .button = {                                                                                  \
             .icon_size = ESP_BROOKESIA_STYLE_SIZE_SQUARE_PERCENT(50),                                       \
             .icon_images = {                                                                         \
-                ESP_BROOKESIA_STYLE_IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_navigation_bar_back_36_36),           \
-                ESP_BROOKESIA_STYLE_IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_navigation_bar_home_36_36),           \
-                ESP_BROOKESIA_STYLE_IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_navigation_bar_recents_screen_36_36), \
+                ESP_BROOKESIA_STYLE_IMAGE_RECOLOR_WHITE(&esp_brookesia_image_middle_navigation_bar_back_32_32),           \
+                ESP_BROOKESIA_STYLE_IMAGE_RECOLOR_WHITE(&esp_brookesia_image_middle_navigation_bar_home_32_32),           \
+                ESP_BROOKESIA_STYLE_IMAGE_RECOLOR_WHITE(&esp_brookesia_image_middle_navigation_bar_recents_screen_32_32), \
             },                                                                                       \
             .navigate_types = {                                                                      \
                 ESP_BROOKESIA_CORE_NAVIGATE_TYPE_BACK,                                                      \

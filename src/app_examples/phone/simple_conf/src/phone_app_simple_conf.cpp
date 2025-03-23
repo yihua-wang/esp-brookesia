@@ -10,12 +10,12 @@ using namespace std;
 
 
 PhoneAppSimpleConf::PhoneAppSimpleConf(bool use_status_bar, bool use_navigation_bar):
-    ESP_Brookesia_PhoneApp("Simple Conf", &esp_brookesia_image_large_app_launcher_default_112_112, true, use_status_bar, use_navigation_bar)
+    ESP_Brookesia_PhoneApp("Simple Conf", &esp_brookesia_image_middle_app_launcher_default_112_112, true, use_status_bar, use_navigation_bar)
 {
 }
 
 PhoneAppSimpleConf::PhoneAppSimpleConf():
-    ESP_Brookesia_PhoneApp("Simple Conf", &esp_brookesia_image_large_app_launcher_default_112_112, true)
+    ESP_Brookesia_PhoneApp("Simple Conf", &esp_brookesia_image_middle_app_launcher_default_112_112, true)
 {
 }
 

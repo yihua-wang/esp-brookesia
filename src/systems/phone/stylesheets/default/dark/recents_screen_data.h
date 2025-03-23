@@ -56,13 +56,13 @@ extern "C" {
         .trash_icon = {                                                           \
             .default_size = ESP_BROOKESIA_STYLE_SIZE_SQUARE(48),                         \
             .press_size = ESP_BROOKESIA_STYLE_SIZE_SQUARE(43),                           \
-            .image = ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_large_recents_screen_trash_64_64),\
+            .image = ESP_BROOKESIA_STYLE_IMAGE(&esp_brookesia_image_middle_recents_screen_trash_48_48),\
         },                                                                        \
         .flags = {                                                                \
             .enable_memory = 1,                                                   \
             .enable_table_height_flex = 1,                                        \
             .enable_table_snapshot_use_icon_image = 0,                            \
-            .enable_table_scroll_anim = 0,                                        \
+            .enable_table_scroll_anim = 1,                                        \
         },                                                                        \
     }
 
