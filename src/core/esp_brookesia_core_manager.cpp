@@ -195,6 +195,7 @@ bool ESP_Brookesia_CoreManager::processAppRun(ESP_Brookesia_CoreApp *app)
     bool is_home_run = false;
     bool is_app_run = false;
     ESP_Brookesia_CoreHome &home = _core._core_home;
+    ESP_Brookesia_CoreAnim &anim = _core._core_anim;
 
     ESP_BROOKESIA_CHECK_NULL_RETURN(app, false, "Invalid app");
     ESP_BROOKESIA_LOGD("Process app(%d) run", app->_id);
@@ -207,6 +208,9 @@ bool ESP_Brookesia_CoreManager::processAppRun(ESP_Brookesia_CoreApp *app)
 
     // Process extra
     ESP_BROOKESIA_CHECK_FALSE_GOTO(processAppRunExtra(app), err, "Process app run extra failed");
+
+    // Process animation
+    ESP_BROOKESIA_CHECK_FALSE_GOTO(anim.processRun(app, _core_data.anim.action, _core_data.anim.path), err, "Process animation failed");
 
     // Update active app
     _active_app = app;

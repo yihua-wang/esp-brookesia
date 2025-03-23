@@ -61,6 +61,10 @@ typedef struct {
     struct {
         uint8_t enable_app_save_snapshot: 1;
     } flags;
+    struct {
+        ESP_Brookesia_LvAnimationActionType_t action;
+        ESP_Brookesia_LvAnimationPathType_t path;
+    } anim;
 } ESP_Brookesia_CoreManagerData_t;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

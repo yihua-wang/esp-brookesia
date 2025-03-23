@@ -10,6 +10,7 @@
 #include "esp_brookesia_core_home.hpp"
 #include "esp_brookesia_core_manager.hpp"
 #include "esp_brookesia_core_event.hpp"
+#include "esp_brookesia_core_anim.hpp"
 #if ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_COMP
 #include "../squareline/ui_comp/ui_comp.h"
 #endif /* ESP_BROOKESIA_SQUARELINE_USE_INTERNAL_UI_COMP */
@@ -28,6 +29,7 @@ public:
     ESP_Brookesia_CoreHome &getCoreHome(void) const            { return _core_home; }
     ESP_Brookesia_CoreManager &getCoreManager(void) const      { return _core_manager; }
     ESP_Brookesia_CoreEvent *getCoreEvent(void)                { return &_core_event; }
+    ESP_Brookesia_CoreAnim *getCoreAnim(void)                { return &_core_anim; }
     bool getDisplaySize(ESP_Brookesia_StyleSize_t &size);
 
     /* Device */
@@ -71,6 +73,7 @@ protected:
     ESP_Brookesia_CoreHome         &_core_home;
     ESP_Brookesia_CoreManager      &_core_manager;
     ESP_Brookesia_CoreEvent        _core_event;
+    ESP_Brookesia_CoreAnim         _core_anim;
     // Device
     lv_disp_t          *_display;
     mutable lv_indev_t *_touch;

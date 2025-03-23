@@ -48,6 +48,10 @@ LV_IMG_DECLARE(esp_brookesia_image_middle_wallpaper_image_dark);
         .flags = {                                    \
             .enable_app_save_snapshot = 1,            \
         },                                            \
+        .anim = {                                            \
+            .action = ESP_BROOKESIA_LV_ANIM_ACT_NONE,        \
+            .path = ESP_BROOKESIA_LV_ANIM_PATH_TYPE_LINEAR,  \
+        },                                                   \
     }
 
 /* Core */
