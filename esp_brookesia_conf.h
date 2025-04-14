@@ -33,7 +33,7 @@
 #ifdef ESP_PLATFORM
 #define ESP_BROOKESIA_LOG_LEVEL        (ESP_BROOKESIA_LOG_LEVEL_INFO)
 #else
-#define ESP_BROOKESIA_LOG_LEVEL        (ESP_BROOKESIA_LOG_LEVEL_DEBUG)
+#define ESP_BROOKESIA_LOG_LEVEL        (ESP_BROOKESIA_LOG_LEVEL_INFO)
 #endif
 
 /* Enable debug logs for modules */

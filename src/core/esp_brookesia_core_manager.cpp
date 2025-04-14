@@ -321,27 +321,13 @@ bool ESP_Brookesia_CoreManager::saveAppSnapshot(ESP_Brookesia_CoreApp *app)
 #if !LV_USE_SNAPSHOT
     ESP_BROOKESIA_CHECK_FALSE_RETURN(false, false, "`LV_USE_SNAPSHOT` is not enabled");
 #else
-    bool resize_app_screen = false;
     lv_res_t ret = LV_RES_INV;
-    lv_area_t app_screen_area = {};
     shared_ptr<ESP_Brookesia_AppSnapshot_t> snapshot = nullptr;
 
     ESP_BROOKESIA_CHECK_NULL_RETURN(app, false, "Invalid app");
     ESP_BROOKESIA_LOGD("Save app(%d) snapshot", app->_id);
 
     ESP_BROOKESIA_CHECK_FALSE_RETURN(lv_obj_is_valid(app->_active_screen), false, "Invalid active screen");
-    app_screen_area = app->_active_screen->coords;
-    if ((lv_area_get_width(&app_screen_area) != _core.getCoreData().screen_size.width) ||
-            (lv_area_get_height(&app_screen_area) != _core.getCoreData().screen_size.height)) {
-        ESP_BROOKESIA_LOGD("Active screen size is not match screen size, resize it");
-        app->_active_screen->coords = (lv_area_t) {
-            .x1 = 0,
-            .y1 = 0,
-            .x2 = (lv_coord_t)(_core.getCoreData().screen_size.width - 1),
-            .y2 = (lv_coord_t)(_core.getCoreData().screen_size.height - 1),
-        };
-        resize_app_screen = true;
-    }
 
     auto it = _id_app_snapshot_map.find(app->_id);
     snapshot = (it != _id_app_snapshot_map.end()) ? it->second : nullptr;
@@ -360,16 +346,9 @@ bool ESP_Brookesia_CoreManager::saveAppSnapshot(ESP_Brookesia_CoreApp *app)
     snapshot->image_resource.header = snapshot->draw_buf->header;
 
     _id_app_snapshot_map[app->_id] = snapshot;
-    if (resize_app_screen) {
-        app->_active_screen->coords = app_screen_area;
-    }
-
     return true;
 
 err:
-    if (resize_app_screen) {
-        app->_active_screen->coords = app_screen_area;
-    }
 
     return false;
 #endif

@@ -24,7 +24,7 @@ extern "C" {
         },                                                       \
         .image = {                                               \
             .main_size = ESP_BROOKESIA_STYLE_SIZE_RECT(200, 200),       \
-            .radius = 20,                                        \
+            .radius = 0,                                        \
         },                                                       \
     }
 
